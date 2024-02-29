@@ -34,7 +34,7 @@ public class Card : MonoBehaviour
         nameText.text = card_name;
         descriptionText.text = description;
         healthText.text = health.ToString();
-        costText.text = health.ToString();
+        costText.text = cost.ToString();
         damageText.text = damage.ToString();
         spriteImage.sprite = sprite;
 
