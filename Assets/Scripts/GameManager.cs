@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +24,8 @@ public class GameManager : MonoBehaviour
     public bool playerout;
     public bool aiout;
     public Card selectedcard;
+    public int offset;
+    public Transform _canvas;
 
     private void Awake()
     {
@@ -39,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         playerout = false;
         aiout = false;
+        offset = 0;
     }
 
     // Update is called once per frame
@@ -46,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         if (deck.Count <= 5)
         {
-            Shuffle();
+            cleanout(discard_pile, deck);
         }
 
         if (playerscore > target)
@@ -54,19 +60,47 @@ public class GameManager : MonoBehaviour
             Debug.Log("you went over, you lose");
             playerout = true;
             round_end();
+        } else if (aiscore > target)
+        {
+            Debug.Log("ai went over, you win");
+            aiout = true;
+            round_end();
         }
         
       // check player and ai score against target score
     }
 
-    void Deal()
+    void Deal(int handsize)
     {
-        // give each player two cards, hiding 
+        for (int i = 0; i < handsize; i++)
+        {
+            int cardNum = Random.Range(0, deck.Count);
+            Card card = Instantiate(deck[cardNum], new Vector3(-797 + offset, 554, 0), quaternion.identity);
+            player_hand.Add(card);
+            card.transform.SetParent(_canvas);
+            deck.RemoveAt(cardNum);
+            offset += 200;
+            
+            int cardNum2 = Random.Range(0, deck.Count);
+            Card cardai = Instantiate(deck[cardNum2], new Vector3(-797 + offset, -670, 0), quaternion.identity);
+            ai_hand.Add(cardai);
+            card.transform.SetParent(_canvas);
+            deck.RemoveAt(cardNum2);
+            offset += 200;
+        }
+
     }
 
-    void Shuffle()
+
+
+    void cleanout(List<Card> first, List<Card> second)
     {
-        // return all cards to the deck 
+        for (int i = 0; i < first.Count; i++)
+        {
+          second.Add(first[i]);
+        }
+
+        first.Clear();
     }
 
     void AI_Turn()
@@ -75,6 +109,12 @@ public class GameManager : MonoBehaviour
         if (target - aiscore <= 11)
         {
             player_hand.Add(selectedcard);
+            selectedcard = null;
+        }
+        else
+        {
+            ai_hand.Add(selectedcard);
+            selectedcard = null;
         }
     }
 
@@ -82,12 +122,12 @@ public class GameManager : MonoBehaviour
     {
         playerdif = target - playerscore;
         aidif = target - aiscore;
-        if (playerdif < aidif && playerdif >= 0)
+        if (playerdif < aidif && playerdif >= 0 || aiout)
         {
             Debug.Log("player wins");
             playerpoints += 1;
             // discard all the cards from both players hands
-        } else if (aidif < playerdif && aidif < 0) 
+        } else if (aidif < playerdif && aidif >= 0 || playerout) 
         {
             Debug.Log("AI wins");
             aipoints += 1;
@@ -101,6 +141,9 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("This shouldn't have came up, something is wrong.");
         }
+
+        
+        
     }
 
 
