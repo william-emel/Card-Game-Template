@@ -9,24 +9,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
     public List<Card> deck = new List<Card>();
-    public List<Card> player_deck = new List<Card>();
-    public List<Card> ai_deck = new List<Card>();
     public List<Card> player_hand = new List<Card>();
     public List<Card> ai_hand = new List<Card>();
     public List<Card> discard_pile = new List<Card>();
-    public int playerscore;
-    public int aiscore;
-    public int target;
-    public int playerdif;
-    public int aidif;
-    public int playerpoints;
-    public int aipoints;
-    public bool playerout;
-    public bool aiout;
+    public int playerscore, aiscore, offset, offset2, playerpoints, aipoints, roundcount = 0;
+    public int target, playerdif, aidif;
+    public bool playerout, aiout, destroythis = false;
     public Card selectedcard;
-    public int offset;
     public Transform _canvas;
-
+    public Card cardselect;
+    public Vector3 middle = new Vector3(-528, -82, 0);
     private void Awake()
     {
         if (gm != null && gm != this)
@@ -42,9 +34,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerout = false;
-        aiout = false;
-        offset = 0;
+        target = 21;
     }
 
     // Update is called once per frame
@@ -67,7 +57,7 @@ public class GameManager : MonoBehaviour
             round_end();
         }
         
-      // check player and ai score against target score
+      
     }
 
     void Deal(int handsize)
@@ -82,11 +72,11 @@ public class GameManager : MonoBehaviour
             offset += 200;
             
             int cardNum2 = Random.Range(0, deck.Count);
-            Card cardai = Instantiate(deck[cardNum2], new Vector3(-797 + offset, -670, 0), quaternion.identity);
+            Card cardai = Instantiate(deck[cardNum2], new Vector3(-797 + offset2, -670, 0), quaternion.identity);
             ai_hand.Add(cardai);
             card.transform.SetParent(_canvas);
             deck.RemoveAt(cardNum2);
-            offset += 200;
+            offset2 += 200;
         }
 
     }
@@ -95,9 +85,20 @@ public class GameManager : MonoBehaviour
 
     void cleanout(List<Card> first, List<Card> second)
     {
+        if (second == discard_pile)
+        {
+            destroythis = true;
+        }
+        else destroythis = false;
+
         for (int i = 0; i < first.Count; i++)
         {
           second.Add(first[i]);
+          if (destroythis)
+          {
+              cardselect = first[i];
+              Destroy(cardselect);
+          }
         }
 
         first.Clear();
@@ -105,14 +106,23 @@ public class GameManager : MonoBehaviour
 
     void AI_Turn()
     {
-        // draw card
-        if (target - aiscore <= 11)
+        int idk = Random.Range(0, deck.Count);
+        selectedcard = deck[idk];
+        deck.RemoveAt(idk);
+        Instantiate(selectedcard, middle, quaternion.identity);
+        if (target - aiscore <= 7)
         {
+            selectedcard.transform.position = new Vector3(-797 + offset, 554, 0);
+            playerscore += selectedcard.health;
+            offset += 200;
             player_hand.Add(selectedcard);
             selectedcard = null;
         }
         else
         {
+            selectedcard.transform.position = new Vector3(-797 + offset2, -670, 0);
+            aiscore = selectedcard.health;
+            offset2 += 200;
             ai_hand.Add(selectedcard);
             selectedcard = null;
         }
@@ -126,27 +136,51 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("player wins");
             playerpoints += 1;
-            // discard all the cards from both players hands
+            cleanout(player_hand, discard_pile);
+            cleanout(ai_hand, discard_pile);
         } else if (aidif < playerdif && aidif >= 0 || playerout) 
         {
             Debug.Log("AI wins");
             aipoints += 1;
-            // discard all the cards from both players hands
+            cleanout(player_hand, discard_pile);
+            cleanout(ai_hand, discard_pile);
         } else if (aidif == playerdif)
-        {
+        { 
             Debug.Log("tie, no one gets any points");
-           // discard all the cards from bother players hands
+            cleanout(player_hand, discard_pile);
+            cleanout(ai_hand, discard_pile);
         }
         else
         {
             Debug.Log("This shouldn't have came up, something is wrong.");
         }
-
+        newround();
         
         
     }
 
+    void newround()
+    {
+        Deal(2);
+        aiscore = 0;
+        playerscore = 0;
+    }
+
+    void playerturn()
+    {
+        Debug.Log("Press 1 to continue playing or 2 to end your turn.");
+        if (Input.GetKeyDown("1"))
+        {
+            int smth = Random.Range(0, deck.Count);
+            selectedcard = deck[smth];
+            deck.RemoveAt(smth);
+            Instantiate(selectedcard, middle, quaternion.identity);
+        }
+        else
+        {
+            round_end();
+        }
+    }
 
 
-    
 }

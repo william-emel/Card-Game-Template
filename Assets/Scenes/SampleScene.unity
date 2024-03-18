@@ -241,11 +241,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8031324947387334707, guid: 17e906621820045c3ab6aae59feeace5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -797
+      value: -528
       objectReference: {fileID: 0}
     - target: {fileID: 8031324947387334707, guid: 17e906621820045c3ab6aae59feeace5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -670
+      value: -82
       objectReference: {fileID: 0}
     - target: {fileID: 8031324947387334707, guid: 17e906621820045c3ab6aae59feeace5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -328,26 +328,26 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  player_deck:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  ai_deck: []
   player_hand: []
   ai_hand: []
   discard_pile: []
   playerscore: 0
   aiscore: 0
+  offset: 0
+  offset2: 0
+  playerpoints: 0
+  aipoints: 0
+  roundcount: 0
   target: 0
   playerdif: 0
   aidif: 0
-  playerpoints: 0
-  aipoints: 0
   playerout: 0
   aiout: 0
+  destroythis: 0
   selectedcard: {fileID: 0}
-  offset: 0
   _canvas: {fileID: 4002591297304670402}
+  cardselect: {fileID: 0}
+  middle: {x: -528, y: -82, z: 0}
 --- !u!4 &622756966
 Transform:
   m_ObjectHideFlags: 0
@@ -377,11 +377,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 970200069765969068, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -597
+      value: -797
       objectReference: {fileID: 0}
     - target: {fileID: 970200069765969068, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -670
+      value: 554
       objectReference: {fileID: 0}
     - target: {fileID: 970200069765969068, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
       propertyPath: m_LocalPosition.z
