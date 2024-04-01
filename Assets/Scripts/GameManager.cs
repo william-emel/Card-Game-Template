@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public Transform _canvas;
     public Card cardselect;
     public Vector3 middle = new Vector3(-528, -82, 0);
+    public int round = 1;
     private void Awake()
     {
         if (gm != null && gm != this)
@@ -40,6 +41,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (round % 2 == 1)
+        {
+            playerturn();
+        } else
+        {
+            AI_Turn();
+        }
         if (deck.Count <= 5)
         {
             cleanout(discard_pile, deck);
@@ -175,6 +183,15 @@ public class GameManager : MonoBehaviour
             selectedcard = deck[smth];
             deck.RemoveAt(smth);
             Instantiate(selectedcard, middle, quaternion.identity);
+            Debug.Log("Now that you have seen the card, press 1 to keep it or press 2 to give it to the ai");
+            if (Input.GetKeyDown("1"))
+            {
+                selectedcard.transform.position = new Vector3(-797 + offset, 554, 0);
+                offset += 200;
+            } else if (Input.GetKeyDown("2"))
+            {
+                selectedcard.transform.position = new Vector3(-797 + offset2, -670, 0);
+            }
         }
         else
         {
