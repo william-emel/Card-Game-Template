@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
-  m_Name: 9S_data
+  m_Name: 8D_data
   m_EditorClassIdentifier: 
-  card_name: 9 of spades
-  health: 9
-  cost: 9
-  damage: 9
+  card_name: 8 of diamonds
+  health: 8
+  cost: 8
+  damage: 8
   sprite: {fileID: 0}
